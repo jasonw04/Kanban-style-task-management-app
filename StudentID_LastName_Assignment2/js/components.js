@@ -93,11 +93,11 @@
       h('p', { className: 'task-description', key: 'description' }, task.description),
       h('div', { className: 'task-meta', key: 'meta' }, [
         h('div', { className: 'meta-row', key: 'created' }, [
-          h('span', { className: 'meta-label', key: 'label' }, 'Created'),
+          h('span', { className: 'meta-label', key: 'label' }, 'Created: '),
           h('span', { key: 'value' }, window.KanbanUtils.formatDate(task.createdAt.slice(0, 10)))
         ]),
         h('div', { className: 'meta-row', key: 'due' }, [
-          h('span', { className: 'meta-label', key: 'label' }, 'Due'),
+          h('span', { className: 'meta-label', key: 'label' }, 'Due: '),
           h('span', { key: 'value' }, window.KanbanUtils.formatDate(task.dueDate))
         ])
       ]),
