@@ -48,13 +48,19 @@ input,
 textarea,
 select {
   width: 100%;
-  border: 1px solid rgba(148, 163, 184, 0.22);
-  background: rgba(15, 23, 42, 0.88);
-  color: var(--text);
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #0f172a;
   border-radius: 14px;
   padding: 0.85rem 0.95rem;
   outline: none;
-  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  font-weight: 600;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #94a3b8;   
+  font-weight: 400; 
 }
 
 input:focus,
@@ -222,8 +228,9 @@ textarea {
   gap: 0.55rem;
   padding: 0.45rem 0.78rem;
   border-radius: 999px;
-  background: rgba(124, 58, 237, 0.13);
-  color: #ddd6fe;
+  background: #eef2ff;   
+  color: #3730a3;        
+  border: 1px solid #e0e7ff;
 }
 
 .chip-name {
@@ -377,7 +384,7 @@ textarea {
   color: #991b1b;
 }
 
-tone-success {
+.tone-success {
   background: #dcfce7;
   color: #166534;
 }
@@ -441,7 +448,7 @@ tone-success {
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(2, 6, 23, 0.72);
+  background: rgba(15, 23, 42, 0.55);
   display: grid;
   place-items: center;
   padding: 1rem;
@@ -452,6 +459,9 @@ tone-success {
   width: min(100%, 560px);
   border-radius: 28px;
   padding: 1.25rem;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
 .large-modal {
@@ -474,9 +484,10 @@ tone-success {
   width: 42px;
   height: 42px;
   font-size: 1.6rem;
+  color: #1e293b;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
   line-height: 1;
-  color: var(--text);
-  background: rgba(148, 163, 184, 0.12);
 }
 
 .modal-form {
@@ -496,7 +507,7 @@ tone-success {
 }
 
 .field-label {
-  color: #dbeafe;
+  color: #334155;
   font-size: 0.92rem;
   font-weight: 700;
 }
@@ -506,6 +517,31 @@ tone-success {
   justify-content: flex-end;
   gap: 0.75rem;
   flex-wrap: wrap;
+}
+
+.board-actions .primary-btn {
+  padding: 0.55rem 0.9rem;
+  font-size: 0.85rem;
+}
+
+select:invalid {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+select {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.empty-date {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+.has-value {
+  color: #0f172a;
+  font-weight: 600;
 }
 
 @media (max-width: 1180px) {
