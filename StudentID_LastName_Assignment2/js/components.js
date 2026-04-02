@@ -138,7 +138,7 @@
         h('div', { className: 'board-actions', key: 'buttons' }, [
           h('button', {
             type: 'button',
-            className: 'icon-btn',
+            className: 'primary-btn',
             onClick: function () { props.onAddTask(board.id); },
             key: 'add-task',
             title: 'Add task'
@@ -275,8 +275,8 @@
     const emptyTask = {
       title: '',
       description: '',
-      label: window.DEFAULT_LABELS[0],
-      priority: window.DEFAULT_PRIORITIES[1],
+      label: '',
+      priority: '',
       dueDate: ''
     };
 
@@ -290,8 +290,8 @@
           setForm({
             title: props.task.title || '',
             description: props.task.description || '',
-            label: props.task.label || window.DEFAULT_LABELS[0],
-            priority: props.task.priority || window.DEFAULT_PRIORITIES[1],
+            label: props.task.label || '',
+            priority: props.task.priority || '',
             dueDate: props.task.dueDate || ''
           });
         } else {
@@ -345,24 +345,35 @@
                 type: 'date',
                 value: form.dueDate,
                 onChange: function (event) { updateField('dueDate', event.target.value); },
-                required: true
+                required: true,
+                className: form.dueDate ? 'has-value' : 'empty-date'
               })
             ),
             h(FieldGroup, { label: 'Label', key: 'label-group' },
               h('select', {
                 value: form.label,
-                onChange: function (event) { updateField('label', event.target.value); }
-              }, window.DEFAULT_LABELS.map(function (label) {
-                return h('option', { value: label, key: label }, label);
-              }))
+                onChange: function (event) { updateField('label', event.target.value); },
+                required: true
+              }, [
+                h('option', { value: '', disabled: true, hidden: true }, 'Select label'),
+              ].concat(
+                window.DEFAULT_LABELS.map(function (label) {
+                  return h('option', { value: label, key: label }, label);
+                })
+              ))
             ),
             h(FieldGroup, { label: 'Priority', key: 'priority-group' },
               h('select', {
                 value: form.priority,
-                onChange: function (event) { updateField('priority', event.target.value); }
-              }, window.DEFAULT_PRIORITIES.map(function (priority) {
-                return h('option', { value: priority, key: priority }, priority);
-              }))
+                onChange: function (event) { updateField('priority', event.target.value); },
+                required: true
+              }, [
+                h('option', { value: '', disabled: true, hidden: true }, 'Select priority'),
+              ].concat(
+                window.DEFAULT_PRIORITIES.map(function (priority) {
+                  return h('option', { value: priority, key: priority }, priority);
+                })
+              ))
             )
           ]),
           h(FieldGroup, { label: 'Description', key: 'description-group' },
