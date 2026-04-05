@@ -1,4 +1,6 @@
 (function () {
+
+  // helper to create a task object with all needed fields
   function createTask(id, title, description, label, priority, dueDate) {
     return {
       id: id,
@@ -11,13 +13,18 @@
     };
   }
 
+  // key used for saving/loading from localStorage
   window.KANBAN_STORAGE_KEY = 'itec3020_assignment2_kanban_app';
 
+  // default dropdown options
   window.DEFAULT_LABELS = ['Feature', 'Design', 'Bug', 'Content'];
   window.DEFAULT_PRIORITIES = ['Low', 'Medium', 'High'];
 
+  // builds the starting data when app loads first time
   window.createInitialState = function createInitialState() {
     const today = new Date();
+
+    // create some different due dates for sample tasks
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
     const inThreeDays = new Date(today);
