@@ -2,6 +2,7 @@
   const h = React.createElement;
   const Fragment = React.Fragment;
 
+  // top header section
   function AppHeader(props) {
     return h('header', { className: 'app-header shell-card' }, [
       h('div', { className: 'header-copy', key: 'copy' }, [
@@ -26,6 +27,7 @@
     ]);
   }
 
+  // stats section at the top
   function StatsPanel(props) {
     const labelEntries = Object.keys(props.counts.labels).sort().map(function (label) {
       return h('div', { className: 'stat-chip', key: label }, [
@@ -62,6 +64,7 @@
     ]);
   }
 
+  // drag and drop target area
   function DropZone(props) {
     const className = props.isActive ? 'drop-zone active' : 'drop-zone';
     return h('div', {
@@ -73,6 +76,7 @@
     });
   }
 
+  // single task card
   function TaskCard(props) {
     const task = props.task;
     const dueStatus = window.KanbanUtils.getDueStatus(task.dueDate);
@@ -125,6 +129,7 @@
     ]);
   }
 
+  // one full board column
   function BoardColumn(props) {
     const board = props.board;
     const tasks = board.tasks;
@@ -161,6 +166,7 @@
       ])
     ];
 
+    // empty board still needs a drop zone
     if (!tasks.length) {
       children.push(
         h(DropZone, {
@@ -175,6 +181,7 @@
       );
     }
 
+    // add a drop zone before every task
     tasks.forEach(function (task, index) {
       children.push(
         h(DropZone, {
@@ -198,6 +205,7 @@
       );
     });
 
+    // last drop zone at the bottom of the board
     children.push(
       h(DropZone, {
         key: 'drop-end',
@@ -212,6 +220,7 @@
     return h('section', { className: 'board-column shell-card' }, children);
   }
 
+  // reusable input wrapper
   function FieldGroup(props) {
     return h('label', { className: 'field-group' }, [
       h('span', { className: 'field-label', key: 'label' }, props.label),
@@ -219,12 +228,14 @@
     ]);
   }
 
+  // board modal for create/edit
   function BoardModal(props) {
     const isOpen = props.isOpen;
     const _React$useState = React.useState(props.initialTitle || '');
     const title = _React$useState[0];
     const setTitle = _React$useState[1];
 
+    // resets the title when modal opens
     React.useEffect(function () {
       if (isOpen) {
         setTitle(props.initialTitle || '');
@@ -271,6 +282,7 @@
     );
   }
 
+  // task modal for create/edit
   function TaskModal(props) {
     const emptyTask = {
       title: '',
@@ -284,6 +296,7 @@
     const form = _React$useState2[0];
     const setForm = _React$useState2[1];
 
+    // load task values when editing, otherwise clear the form
     React.useEffect(function () {
       if (props.isOpen) {
         if (props.task) {
@@ -304,6 +317,7 @@
       return null;
     }
 
+    // updates one field at a time
     function updateField(fieldName, value) {
       setForm(function (previous) {
         const next = Object.assign({}, previous);
