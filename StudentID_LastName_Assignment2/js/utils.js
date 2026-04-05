@@ -1,10 +1,14 @@
 (function () {
+
+  // milliseconds in one day (used for date calculations)
   const DAY_IN_MS = 1000 * 60 * 60 * 24;
 
+  // quick deep copy so we don’t mutate original state
   function cloneState(state) {
     return JSON.parse(JSON.stringify(state));
   }
 
+  // formats date into something readable
   function formatDate(dateString) {
     if (!dateString) {
       return 'No due date';
@@ -22,6 +26,7 @@
     });
   }
 
+  // figures out due status based on today
   function getDueStatus(dueDate) {
     if (!dueDate) {
       return { text: 'No Due Date', tone: 'neutral' };
@@ -47,6 +52,7 @@
     return { text: 'On Track', tone: 'success' };
   }
 
+  // counts everything for stats panel
   function getTaskCounts(boards) {
     const counts = {
       boards: boards.length,
@@ -60,9 +66,12 @@
     boards.forEach(function (board) {
       board.tasks.forEach(function (task) {
         counts.tasks += 1;
+
+        // count labels
         counts.labels[task.label] = (counts.labels[task.label] || 0) + 1;
 
         const dueStatus = getDueStatus(task.dueDate).text;
+
         if (dueStatus === 'Overdue') {
           counts.overdue += 1;
         } else if (dueStatus === 'Due Soon') {
@@ -76,43 +85,53 @@
     return counts;
   }
 
+  // save state to localStorage
   function saveState(state) {
     localStorage.setItem(window.KANBAN_STORAGE_KEY, JSON.stringify(state));
   }
 
+  // load saved state or fallback to default
   function loadState() {
     const raw = localStorage.getItem(window.KANBAN_STORAGE_KEY);
+
     if (!raw) {
       return window.createInitialState();
     }
 
     try {
       const parsed = JSON.parse(raw);
+
+      // basic check to make sure data looks valid
       if (!parsed || !Array.isArray(parsed.boards)) {
         return window.createInitialState();
       }
+
       return parsed;
     } catch (error) {
       return window.createInitialState();
     }
   }
 
+  // simple unique id generator
   function generateId(prefix) {
     return prefix + '-' + Date.now() + '-' + Math.random().toString(16).slice(2);
   }
 
+  // find board index by id
   function findBoardIndex(boards, boardId) {
     return boards.findIndex(function (board) {
       return board.id === boardId;
     });
   }
 
+  // handles moving tasks (same board or different board)
   function moveTask(boards, dragData, destinationBoardId, destinationIndex) {
     if (!dragData) {
       return boards;
     }
 
     const nextBoards = cloneState(boards);
+
     const sourceBoardIndex = findBoardIndex(nextBoards, dragData.sourceBoardId);
     const destinationBoardIndex = findBoardIndex(nextBoards, destinationBoardId);
 
@@ -122,6 +141,7 @@
 
     const sourceBoard = nextBoards[sourceBoardIndex];
     const destinationBoard = nextBoards[destinationBoardIndex];
+
     const taskIndex = sourceBoard.tasks.findIndex(function (task) {
       return task.id === dragData.taskId;
     });
@@ -130,9 +150,12 @@
       return boards;
     }
 
+    // remove task from original spot
     const taskToMove = sourceBoard.tasks.splice(taskIndex, 1)[0];
 
     let safeDestinationIndex = destinationIndex;
+
+    // keep index in valid range
     if (safeDestinationIndex < 0) {
       safeDestinationIndex = 0;
     }
@@ -140,14 +163,18 @@
       safeDestinationIndex = destinationBoard.tasks.length;
     }
 
+    // adjust index when moving within same board
     if (dragData.sourceBoardId === destinationBoardId && taskIndex < safeDestinationIndex) {
       safeDestinationIndex -= 1;
     }
 
+    // insert task in new position
     destinationBoard.tasks.splice(safeDestinationIndex, 0, taskToMove);
+
     return nextBoards;
   }
 
+  // expose all helpers globally
   window.KanbanUtils = {
     formatDate: formatDate,
     getDueStatus: getDueStatus,
@@ -158,4 +185,5 @@
     moveTask: moveTask,
     cloneState: cloneState
   };
+
 })();
