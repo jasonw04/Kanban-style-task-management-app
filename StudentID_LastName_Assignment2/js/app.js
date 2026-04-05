@@ -3,30 +3,37 @@
   const createRoot = ReactDOM.createRoot;
 
   function App() {
+    // main app state (loads from localStorage)
     const _React$useState = React.useState(window.KanbanUtils.loadState());
     const state = _React$useState[0];
     const setState = _React$useState[1];
 
+    // board modal (create / edit)
     const _React$useState2 = React.useState(null);
     const boardModal = _React$useState2[0];
     const setBoardModal = _React$useState2[1];
 
+    // task modal (create / edit)
     const _React$useState3 = React.useState(null);
     const taskModal = _React$useState3[0];
     const setTaskModal = _React$useState3[1];
 
+    // stores drag info while dragging a task
     const _React$useState4 = React.useState(null);
     const dragData = _React$useState4[0];
     const setDragData = _React$useState4[1];
 
+    // used to highlight where task will drop
     const _React$useState5 = React.useState(null);
     const activeDropZone = _React$useState5[0];
     const setActiveDropZone = _React$useState5[1];
 
+    // save every change to localStorage
     React.useEffect(function () {
       window.KanbanUtils.saveState(state);
     }, [state]);
 
+    // counts for stats panel
     const counts = React.useMemo(function () {
       return window.KanbanUtils.getTaskCounts(state.boards);
     }, [state]);
@@ -50,6 +57,8 @@
 
       setState(function (previous) {
         const next = window.KanbanUtils.cloneState(previous);
+
+        // create new board or rename existing
         if (boardModal.mode === 'create') {
           next.boards.push({
             id: window.KanbanUtils.generateId('board'),
@@ -64,6 +73,7 @@
             return board;
           });
         }
+
         return next;
       });
 
@@ -76,6 +86,7 @@
         return;
       }
 
+      // confirm before deleting
       const message = board.tasks.length
         ? 'Delete this board and all tasks inside it?'
         : 'Delete this board?';
@@ -86,10 +97,12 @@
 
       setState(function (previous) {
         const next = window.KanbanUtils.cloneState(previous);
+
         next.boards = next.boards.filter(function (item) {
           return item.id !== boardId;
         });
 
+        // always keep at least one board
         if (!next.boards.length) {
           next.boards.push({
             id: window.KanbanUtils.generateId('board'),
@@ -123,17 +136,20 @@
         dueDate: formData.dueDate
       };
 
+      // basic check so empty tasks don’t get added
       if (!cleaned.title || !cleaned.description || !cleaned.dueDate) {
         return;
       }
 
       setState(function (previous) {
         const next = window.KanbanUtils.cloneState(previous);
+
         next.boards = next.boards.map(function (board) {
           if (board.id !== taskModal.boardId) {
             return board;
           }
 
+          // add or update task
           if (taskModal.mode === 'create') {
             board.tasks.push({
               id: window.KanbanUtils.generateId('task'),
@@ -159,6 +175,7 @@
 
           return board;
         });
+
         return next;
       });
 
@@ -172,6 +189,7 @@
 
       setState(function (previous) {
         const next = window.KanbanUtils.cloneState(previous);
+
         next.boards = next.boards.map(function (board) {
           if (board.id === boardId) {
             board.tasks = board.tasks.filter(function (task) {
@@ -180,11 +198,13 @@
           }
           return board;
         });
+
         return next;
       });
     }
 
     function handleDragStart(event, taskId, sourceBoardId, sourceIndex) {
+      // save drag info so we know what’s being moved
       const payload = {
         taskId: taskId,
         sourceBoardId: sourceBoardId,
@@ -219,6 +239,8 @@
       event.preventDefault();
 
       let payload = dragData;
+
+      // fallback if needed
       if (!payload) {
         try {
           payload = JSON.parse(event.dataTransfer.getData('text/plain'));
@@ -233,7 +255,12 @@
 
       setState(function (previous) {
         return {
-          boards: window.KanbanUtils.moveTask(previous.boards, payload, destinationBoardId, destinationIndex)
+          boards: window.KanbanUtils.moveTask(
+            previous.boards,
+            payload,
+            destinationBoardId,
+            destinationIndex
+          )
         };
       });
 
@@ -245,6 +272,8 @@
       if (!window.confirm('Reset the app back to the starter sample data?')) {
         return;
       }
+
+      // resets everything back to default
       setState(window.createInitialState());
     }
 
