@@ -6,7 +6,7 @@ reasoning behind choices
 
 design choices
 -overall style and theme
-    -same as assignment 1 we used https://www.canadacomputers.com/en/ as a basis as the inspiration of the colour theme but we used wrike https://www.wrike.com/features/kanban-boards/ as an inspiration for both layout and theme
+    -same as assignment 1 we used https://www.canadacomputers.com/en/ as a basis as the inspiration of the colour theme, but we used wrike https://www.wrike.com/features/kanban-boards/ and the in class example as an inspiration for both layout and theme
     -uses a large header with buttons to reset and add a new board and has a a board and task counter with a label counter under it
     -uses larges cards to separate tasks and show visibility and hover effect for buttons to show clickability
     -different colour buttons to distinguish uses and labels to distinguish the type of task
